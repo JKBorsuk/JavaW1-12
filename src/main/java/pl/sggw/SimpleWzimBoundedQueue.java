@@ -1,12 +1,14 @@
 package pl.sggw;
 
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 public class SimpleWzimBoundedQueue<E> implements WzimBoundedQueue<E> {
 
     E[] array;
     int cap;
     int Size = 0;
+    int Lewa = 0;
 
     // .
     public SimpleWzimBoundedQueue(final int maxCapacity) {
@@ -19,7 +21,9 @@ public class SimpleWzimBoundedQueue<E> implements WzimBoundedQueue<E> {
         boolean pom = false;
         for(int i = 0; i<array.length; i++)
         {
-            if(array[i] == null) {array[i] = e; pom = true; break;}
+            if(array[i] == null) {
+                array[i] = e; pom = true; break;
+            }
         }
         if(pom)
         {
@@ -50,27 +54,37 @@ public class SimpleWzimBoundedQueue<E> implements WzimBoundedQueue<E> {
 
     public E remove()
     {
-        E pom_zm = array[0];
-        array[0] = null;
-        Size--;
-        return pom_zm;
+        if(Size > 0)
+        {
+            E pom_zm = array[Lewa];
+            array[Lewa] = null;
+            Size--;
+            Lewa+= 1;
+            return pom_zm;
+        }
+        else throw new NoSuchElementException();
     }
 
     public E poll()
     {
         if(Size > 0)
         {
-            E pom_zm = array[0];
-            array[0] = null;
+            E pom_zm = array[Lewa];
+            array[Lewa] = null;
             Size--;
+            Lewa+= 1;
             return pom_zm;
         }
         else return null;
     }
 
-    public E element() throws IndexOutOfBoundsException{
+    public E element()
+    {
         if(Size > 0) return array[0];
-        return null;
+        else{
+            throw new NoSuchElementException();
+        }
+        //return null;
     }
 
     public E peek()
